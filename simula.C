@@ -10,10 +10,13 @@
 #include "TString.h"
 #include "TMath.h"
 #include <string>
+#include <vector>
 #include "Neutron.h"
 #include "Transport.h"
 //#include "Sigma.h"
 #endif
+
+using namespace std;
 
 //////////////////////////////////////////////////////////
 ////                                                  ////
@@ -112,93 +115,34 @@ double simula(int npart, float energy, float thick, vector<float> &vec_length){ 
 void fakemain(){
 
   // ------------------------------------
-  // --- 2Million particles, 1 Mev, 10 cm
-  TH1D* hFluenza_2M_1Mev_10cm = new TH1D("hFluenza_2M_1Mev_10cm","hFluenza_2M_1Mev_10cm",50,0.005,0.006);
-  TH1F* hLength_2M_1Mev_10cm  = new TH1F("hLength_2M_1Mev_10cm", "hLength_2M_1Mev_10cm", 50,0.,2.);
+  // --- 200Million particles, 1000 Kev, 10 cm
+  TH1D* hFluenza_200M_1000Kev_10cm = new TH1D("hFluenza_200M_1000Kev_10cm","hFluenza_200M_1000Kev_10cm",50,0.005,0.006);
+  TH1F* hLength_200M_1000Kev_10cm  = new TH1F("hLength_200M_1000Kev_10cm", "hLength_200M_1000Kev_10cm", 50,0.,2.);
   
   
-  for(int i=0; i<1; i++){
+  for(int i=0; i<100; i++){
 
     vector<float> vec_length;
     vec_length.clear();
 
-    hFluenza_2M_1Mev_10cm->Fill(simula(2000000, 1000000, 10.,vec_length));
+    hFluenza_200M_1000Kev_10cm->Fill(simula(2000000, 1000000, 10.,vec_length));
     for(UInt_t j=0; j<vec_length.size();j++){
-      hLength_2M_1Mev_10cm->Fill(vec_length[j]);
+      hLength_200M_1000Kev_10cm->Fill(vec_length[j]);
     }
     
   }
 
-  TCanvas* cFluenza_2M_1Mev_10cm = new TCanvas("cFluenza_2M_1Mev_10cm","cFluenza_2M_1Mev_10cm");
-  cFluenza_2M_1Mev_10cm->cd();
-  hFluenza_2M_1Mev_10cm->Draw();
-  cFluenza_2M_1Mev_10cm->SaveAs("Fluenza_2M_1Mev_10cm.png");
-
-  TCanvas* cLength_2M_1Mev_10cm = new TCanvas("cLength_2M_1Mev_10cm","cLength_2M_1Mev_10cm");
-  cLength_2M_1Mev_10cm->cd();
-  hLength_2M_1Mev_10cm->Draw();
-  cLength_2M_1Mev_10cm->SaveAs("Length_2M_1Mev_10cm.png");
-
+  TCanvas* c_200Mparticles_1000Kev_10cm = new TCanvas("c_200Mparticles_1000Kev_10cm","c_200Mparticles_1000Kev_10cm");
+  c_200Mparticles_1000Kev_10cm->Divide(2,1);
+  c_200Mparticles_1000Kev_10cm->cd(1);
+  hFluenza_200M_1000Kev_10cm->Draw();
+  c_200Mparticles_1000Kev_10cm->cd(2);
+  hLength_200M_1000Kev_10cm->Draw();
+  c_200Mparticles_1000Kev_10cm->SaveAs("c_200Mparticles_1000Kev_10cm.png");
+  // ------------------------------------
 
 
-  // ---------------------------------------
-  // --- 2Million particles, 0.1 Mev, 20 cm
-  TH1D* hFluenza_2M_100Kev_20cm = new TH1D("hFluenza_2M_100Kev_20cm","hFluenza_2M_100Kev_20cm",50,0.,0.01);
-  TH1F* hLength_2M_100Kev_20cm  = new TH1F("hLength_2M_100Kev_20cm", "hLength_2M_100Kev_20cm", 50,0.,2.);
-  
-  
-  for(int i=0; i<1; i++){
 
-    vector<float> vec_length;
-    vec_length.clear();
-
-    hFluenza_2M_100Kev_20cm->Fill(simula(2000000, 100000, 20.,vec_length));
-    for(UInt_t j=0; j<vec_length.size();j++){
-      hLength_2M_100Kev_20cm->Fill(vec_length[j]);
-    }
-    
-  }
-
-  TCanvas* cFluenza_2M_100Kev_20cm = new TCanvas("cFluenza_2M_100Kev_20cm","cFluenza_2M_100Kev_20cm");
-  cFluenza_2M_100Kev_20cm->cd();
-  hFluenza_2M_100Kev_20cm->Draw();
-  cFluenza_2M_100Kev_20cm->SaveAs("Fluenza_2M_100Kev_20cm.png");
-
-  TCanvas* cLength_2M_100Kev_20cm = new TCanvas("cLength_2M_100Kev_20cm","cLength_2M_100Kev_20cm");
-  cLength_2M_100Kev_20cm->cd();
-  hLength_2M_100Kev_20cm->Draw();
-  cLength_2M_100Kev_20cm->SaveAs("Length_2M_100Kev_20cm.png");
-  // ------------------------
-
-
-  // ---------------------------------------
-  // --- 2Million particles, 0.1 Mev, 20 cm
-  TH1D* hFluenza_2M_100Kev_50cm = new TH1D("hFluenza_2M_100Kev_50cm","hFluenza_2M_100Kev_50cm",50,0.,0.01);
-  TH1F* hLength_2M_100Kev_50cm  = new TH1F("hLength_2M_100Kev_50cm", "hLength_2M_100Kev_50cm", 50,0.,2.);
-  
-  
-  for(int i=0; i<1; i++){
-
-    vector<float> vec_length;
-    vec_length.clear();
-
-    hFluenza_2M_100Kev_50cm->Fill(simula(2000000, 100000, 20.,vec_length));
-    for(UInt_t j=0; j<vec_length.size();j++){
-      hLength_2M_100Kev_50cm->Fill(vec_length[j]);
-    }
-    
-  }
-
-  TCanvas* cFluenza_2M_100Kev_50cm = new TCanvas("cFluenza_2M_100Kev_50cm","cFluenza_2M_100Kev_50cm");
-  cFluenza_2M_100Kev_50cm->cd();
-  hFluenza_2M_100Kev_50cm->Draw();
-cFluenza_2M_100Kev_50cm->SaveAs("Fluenza_2M_100Kev_50cm.png");
-
-  TCanvas* cLength_2M_100Kev_50cm = new TCanvas("cLength_2M_100Kev_50cm","cLength_2M_100Kev_50cm");
-  cLength_2M_100Kev_50cm->cd();
-  hLength_2M_100Kev_50cm->Draw();
-  cLength_2M_100Kev_50cm->SaveAs("Length_2M_100Kev_50cm.png");
-  // ------------------------
   
 
 
