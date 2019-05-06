@@ -39,3 +39,14 @@ git push origin master
 ```
 
 Otherwise you can make a fork of the repository, develop therein, and make a pull request
+
+
+To run the code
+-----
+
+```
+root 
+.X compilemyclass.C
+fakemain()
+```
+
