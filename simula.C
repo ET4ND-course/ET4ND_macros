@@ -44,20 +44,20 @@ TH1F GetHist(TString filename){
 }
 
 //double simula(int npart=1, float energy=1000000, float thick=10.){   // spessore in cm e energia in eV
-double simula(int npart, float energy, float thick, vector<float> &vec_length){   // spessore in cm e energia in eV
+double simula(Long64_t npart, float energy, float thick, vector<float> &vec_length){   // spessore in cm e energia in eV
 
 
   // 1, 10, 50 cm
   // 10, 100, 1000 keV
   bool verbose=false;
-  const int seed=0;
+  //  const int seed=0;
   const int nbin=110, enmin=0, enmax=(int) (energy+energy*0.1);
   int count=0;
   float x=0.,y=0.,length=-2., totlength=0.;
   float fluence;
 
   delete gRandom;
-  gRandom=new TRandom3(seed);
+  gRandom=new TRandom3(0);
 
   TString filename[4]={"CC","HC","CS","HS"};
 
@@ -82,7 +82,7 @@ double simula(int npart, float energy, float thick, vector<float> &vec_length){ 
   const float radius=trans->GetRadius();
   const float volume=4./3.*TMath::Pi()*(radius)*(radius)*(radius);
 
- for(int i=0; i<npart; i++){
+ for(Long64_t i=0; i<npart; i++){
     GetStartingPoint(x,y);
     n0=new Neutron(x,y,0.,0.,0.,energy);     //implementare in neutron il creatore con x,y,z e direz fissa iniziale (lungo z)
     trans->SetStartN(*n0);
@@ -98,11 +98,11 @@ double simula(int npart, float energy, float thick, vector<float> &vec_length){ 
   }
   fluence=totlength/volume/npart;
 
-  TString title="starting energy = "+std::to_string((int) energy/1000)+ " keV";
-  histen->SetTitle(title);
-  histen->GetYaxis()->SetTitle("Number of Neutrons");
-  histen->GetXaxis()->SetTitle("Energy (MeV)");
-  histen->Draw("hist");
+  // TString title="starting energy = "+std::to_string((int) energy/1000)+ " keV";
+  // histen->SetTitle(title);
+  // histen->GetYaxis()->SetTitle("Number of Neutrons");
+  // histen->GetXaxis()->SetTitle("Energy (MeV)");
+  // histen->Draw("hist");
 
   cout << "--------------------------------------------------------\n\t\t\t RISULTATI \n--------------------------------------------------------" << endl;
   cout << " Lunghezza tot  " << totlength << "\tcount= "<< count << endl;
@@ -115,30 +115,28 @@ double simula(int npart, float energy, float thick, vector<float> &vec_length){ 
 void fakemain(){
 
   // ------------------------------------
-  // --- 200Million particles, 1000 Kev, 10 cm
-  TH1D* hFluenza_200M_1000Kev_10cm = new TH1D("hFluenza_200M_1000Kev_10cm","hFluenza_200M_1000Kev_10cm",50,0.005,0.006);
-  TH1F* hLength_200M_1000Kev_10cm  = new TH1F("hLength_200M_1000Kev_10cm", "hLength_200M_1000Kev_10cm", 50,0.,2.);
+  TH1D* hFluenza = new TH1D("hFluenza","hFluenza",20,0.008,0.009);
+  TH1F* hLength  = new TH1F("hLength", "hLength", 50,0.,2.);
   
   
-  for(int i=0; i<100; i++){
+  for(int i=0; i<10; i++){
 
     vector<float> vec_length;
     vec_length.clear();
 
-    hFluenza_200M_1000Kev_10cm->Fill(simula(2000000, 1000000, 10.,vec_length));
+    hFluenza->Fill(simula(2000000, 10000, 1.,vec_length));
     for(UInt_t j=0; j<vec_length.size();j++){
-      hLength_200M_1000Kev_10cm->Fill(vec_length[j]);
+      hLength->Fill(vec_length[j]);
     }
     
   }
 
-  TCanvas* c_200Mparticles_1000Kev_10cm = new TCanvas("c_200Mparticles_1000Kev_10cm","c_200Mparticles_1000Kev_10cm");
-  c_200Mparticles_1000Kev_10cm->Divide(2,1);
-  c_200Mparticles_1000Kev_10cm->cd(1);
-  hFluenza_200M_1000Kev_10cm->Draw();
-  c_200Mparticles_1000Kev_10cm->cd(2);
-  hLength_200M_1000Kev_10cm->Draw();
-  c_200Mparticles_1000Kev_10cm->SaveAs("c_200Mparticles_1000Kev_10cm.png");
+  TFile* fOut = new TFile("f_200Mparticles_10KeV_1cm_prova.root", "recreate");
+  fOut->cd();
+  hFluenza->Write("hFluenza"); delete hFluenza;
+  hLength->Write("hLength");   delete hLength;
+  fOut->Close();
+  delete fOut;
   // ------------------------------------
 
 
